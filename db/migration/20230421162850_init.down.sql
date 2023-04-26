@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS csv_data;
+DROP TABLE IF EXISTS iva_compras;
+DROP TABLE IF EXISTS clientes;
