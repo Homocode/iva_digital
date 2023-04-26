@@ -8,6 +8,9 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+
+	db "github.com/homocode/libro_iva_afip/db"
 )
 
 func (s *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
@@ -21,16 +24,13 @@ func (s *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
 		r.ParseMultipartForm(10 << 20)
 
 		// retrieve file
-		file, handler, err := r.FormFile("myFile")
+		file, _, err := r.FormFile("myFile")
 		if err != nil {
 			fmt.Println("Error Retrieving the File")
 			fmt.Println(err)
 			return
 		}
 		defer file.Close()
-		fmt.Printf("Uploaded File: %+v\n", handler.Filename)
-		fmt.Printf("File Size: %+v\n", handler.Size)
-		fmt.Printf("MIME Header: %+v\n", handler.Header)
 
 		// write temporary file on our server
 		tempFile, err := os.CreateTemp("./csv", "upload-*.csv")
@@ -47,7 +47,17 @@ func (s *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
 		// return result
 		fmt.Fprintf(w, "Successfully Uploaded File\n")
 
-		s.store.CopyFromCsv(context.Background(), fmt.Sprintf("./csv/%s", tempFile.Name()))
+		absPath, err := filepath.Abs(tempFile.Name())
+		// TODO: handle this err
+		if err != nil {
+			return
+		}
 
+		arg := db.LoadTxParams{
+			CsvFilePath: absPath,
+			CuitCliente: "20-38",
+		}
+		fmt.Println(">>", arg.CsvFilePath)
+		s.store.LoadIvaComprasToDB(context.Background(), arg)
 	}
 }

@@ -9,7 +9,7 @@ import (
 
 func (q *Queries) CopyFromCsv(ctx context.Context, csvPath string) (sql.Result, error) {
 	const copyQuery = `
-	COPY csv_data
+	COPY comprabantes_compras_csv
 	FROM '%s'
 	DELIMITER ';'
 	CSV HEADER;
@@ -23,52 +23,11 @@ func (q *Queries) CopyFromCsv(ctx context.Context, csvPath string) (sql.Result, 
 	return rs, err
 }
 
-func (q *Queries) getColumnsName(ctx context.Context, table string) ([]string, error) {
-	columnsQuery := `
-	SELECT ("column_name")
-	FROM information_schema.columns
-   	WHERE table_schema = 'public'
-	AND table_name   = '%s';
-	`
-	query := fmt.Sprintf(columnsQuery, table)
-
-	stmt := q.PrepareStmt(ctx, query)
-
-	rows, err := stmt.QueryContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-	var i string
-	var items []string
-	defer rows.Close()
-	for rows.Next() {
-		if err = rows.Scan(
-			&i,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return items, err
-}
-
-func (q *Queries) CreateIvaCompras(ctx context.Context, cuitCliente string) (sql.Result, error) {
-	cols, err := q.getColumnsName(ctx, "iva_compras")
-	if err != nil {
-		return nil, err
-	}
-
+func (q *Queries) CreateIvaComprasFromColumns(ctx context.Context, cols []string, cuitCliente string) (sql.Result, error) {
 	var b bytes.Buffer
 	for idx := range cols {
-		if idx == 0 {
+		// skip the first to columns name
+		if idx == 0 || idx == 1 {
 			continue
 		}
 		if idx == len(cols)-1 {
@@ -78,7 +37,7 @@ func (q *Queries) CreateIvaCompras(ctx context.Context, cuitCliente string) (sql
 		}
 	}
 
-	query := fmt.Sprintf("INSERT INTO iva_compras SELECT c.cuit, %s FROM clientes as c, csv_data as d WHERE c.cuit = '%s';", &b, cuitCliente)
+	query := fmt.Sprintf("INSERT INTO iva_compras SELECT c.cuit, %s FROM clientes as c, comprabantes_compras_csv as d WHERE c.cuit = '%s';", &b, cuitCliente)
 	fmt.Println("query ->>", query)
 	rs, err := q.db.ExecContext(ctx, query)
 	if err != nil {

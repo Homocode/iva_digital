@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -10,17 +11,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func main() {
-	type config struct {
-		DBDriver string
-		DBSource string
-	}
+type config struct {
+	DBDriver string
+	DBSource string
+}
 
-	cfg := config{
-		DBDriver: "postgres",
-		DBSource: "postgres://localhost:5432/contable?sslmode=disable",
-	}
-
+func newDB(cfg config) *sql.DB {
 	conn, err := sql.Open(cfg.DBDriver, cfg.DBSource)
 	if err != nil {
 		log.Fatal("Can´t open connection to DB: ", err)
@@ -29,6 +25,20 @@ func main() {
 	if pingErr != nil {
 		log.Fatal("Ping to DB fail, can´t connect to DB: ", pingErr)
 	}
+
+	return conn
+
+}
+
+func main() {
+	conn := newDB(config{
+		DBDriver: "postgres",
+		DBSource: "postgres://localhost:5432/contable?sslmode=disable",
+	})
+	defer func() {
+		_ = conn.Close()
+		fmt.Println("DB close")
+	}()
 
 	store := db.NewStore(conn)
 	server := api.NewServer(store, "localhost:8080")

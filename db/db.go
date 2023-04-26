@@ -6,11 +6,18 @@ import (
 	"log"
 )
 
-type Queries struct {
-	db *sql.DB
+type DBTX interface {
+	ExecContext(context.Context, string, ...interface{}) (sql.Result, error)
+	PrepareContext(context.Context, string) (*sql.Stmt, error)
+	QueryContext(context.Context, string, ...interface{}) (*sql.Rows, error)
+	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
 }
 
-func NewQueries(db *sql.DB) *Queries {
+type Queries struct {
+	db DBTX
+}
+
+func NewQueries(db DBTX) *Queries {
 	return &Queries{db: db}
 }
 
