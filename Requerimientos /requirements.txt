@@ -1,0 +1,49 @@
+---##Requeriments##---
+
+Generar y administrar libros de iva para presentar en afip, a partir de datos importados de un 
+archivo .csv y facturas impresas (fisicas).
+
+Pasos para generar el libro (punto de vista del usuario):
+ - Descargar archivo ivacomp.csv
+ - Importar los datos necesarios a libroIva.csv
+ - Cargar los datos de las facturas fisicas en libroIva.xls
+ - Exportar libroIva.xls a .txt con formato especificado por afip
+
+Pasos para generar el libro (punto de vista de la aplicacion):
+- Exportar .csv a tabla en base de datos (se exportan todas las columnas del .csv)
+- Exportar los datos necesarios de la tabla previa a una nueva tabla (datos filtrados)
+- Crear archivo libroIva.csv y exportar los datos de la tabla previa al archivo
+- Exportar libroIva.csv a .txt segun fromato afip
+
+"Fecha_de_Emisión" text,
+    "Tipo_de_Comprobante" text,
+    "Punto_de_Venta" text,
+    "Número_de_Comprobante" text,
+    "Tipo_Doc._Vendedor" text,
+    "Nro._Doc._Vendedor" text,
+    "Denominación_Vendedor" text,
+    "Importe_Total" text,
+    "Moneda_Original" text,
+    "Tipo_de_Cambio" text,
+    "Importe_No_Gravado" text,
+    "Importe_Exento" text,
+    "Crédito_Fiscal_Computable" text,
+    "Importe_de_Per._o_Pagos_a_Cta._de_Otros_Imp._Nac." text,
+    "Importe_de_Percepciones_de_Ingresos_Brutos" text,
+    "Importe_de_Impuestos_Municipales" text,
+    "Importe_de_Percepciones_o_Pagos_a_Cuenta_de_IVA" text,
+    "Importe_de_Impuestos_Internos" text,
+    "Importe_Otros_Tributos" text,
+    "Neto_Gravado_IVA_0%" text,
+    "Neto_Gravado_IVA_2,5%" text, 
+    "Importe_IVA_2,5%" text,
+    "Neto_Gravado_IVA_5%" text,
+    "Importe_IVA_5%" text,
+    "Neto_Gravado_IVA_10,5%" text,
+    "Importe_IVA_10,5%" text,
+    "Neto_Gravado_IVA_21%" text,
+    "Importe_IVA_21%" text,
+    "Neto_Gravado_IVA_27%" text,
+    "Importe_IVA_27%" text,
+    "Total_Neto_Gravado" text,
+    "Total_IVA" text

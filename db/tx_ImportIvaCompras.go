@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
 )
 
 type LoadTxParams struct {
@@ -27,25 +26,19 @@ func (s *SQLStore) LoadIvaComprasToDB(ctx context.Context, arg LoadTxParams) (Lo
 		if err != nil {
 			return err
 		}
-		fmt.Println("1")
-		var cols []string
-		cols, err = q.getColumnsName(ctx, "iva_compras")
-		if err != nil {
-			return err
-		}
-		fmt.Println("2")
+
 		// Populate the table iva_compras with the select columns
 		// from comprobantes_compras_csv and associate cuit of the cliente
-		rs.createIvaComprasResult, err = s.CreateIvaComprasFromColumns(ctx, cols, arg.CuitCliente)
+		rs.createIvaComprasResult, err = s.InsertComprobantes(ctx, arg.CuitCliente)
 		if err != nil {
 			return err
 		}
-		fmt.Println("3")
+
 		_, err = q.deleteAllContent(ctx, "comprabantes_compras_csv")
 		if err != nil {
 			return err
 		}
-		fmt.Println("4")
+
 		return nil
 	})
 
