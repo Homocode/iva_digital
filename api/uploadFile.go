@@ -3,22 +3,37 @@ package api
 import (
 	"context"
 	"fmt"
-	"html/template"
 	"net/http"
 
 	db "github.com/homocode/libro_iva_afip/db"
 	file "github.com/homocode/libro_iva_afip/files"
 )
 
-func (s *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
+func (s *Server) UploadFile() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		filePath, err := file.UploadFile(r)
+		if err != nil {
+			return
+		}
+		// return result
+		fmt.Fprintf(w, "Successfully Uploaded File\n")
 
-	fmt.Println("method:", r.Method)
+		arg := db.LoadTxParams{
+			CsvFilePath: filePath,
+			CuitCliente: "20-38",
+		}
+		s.Store.LoadIvaComprasToDB(context.Background(), arg)
+	}
+
+}
+
+/* func (s *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method == "GET" {
 		t, _ := template.ParseFiles("fileUp.html")
 		t.Execute(w, nil)
 	} else {
 		filePath, err := file.UploadFile(r)
-		// TODO: handle this err
 		if err != nil {
 			return
 		}
@@ -32,3 +47,4 @@ func (s *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
 		s.store.LoadIvaComprasToDB(context.Background(), arg)
 	}
 }
+*/

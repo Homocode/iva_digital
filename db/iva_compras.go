@@ -27,8 +27,15 @@ func (q *Queries) CopyFromCsv(ctx context.Context, csvPath string) (sql.Result, 
 // Inserta los comprobantes de pago de la tabla comprobantes_compras_csv y
 // el cuit del cliente asociado a los comprobantes.
 func (q *Queries) InsertComprobantes(ctx context.Context, cuitCliente string) (sql.Result, error) {
-	query := fmt.Sprintf("INSERT INTO iva_compras SELECT c.cuit, d.* FROM clientes as c, comprabantes_compras_csv as d WHERE c.cuit = '%s';", cuitCliente)
-	fmt.Println("query ->>", query)
+	const insertQuery = `
+	INSERT INTO iva_compras
+	SELECT c.cuit, d.* 
+	FROM clientes as c, comprabantes_compras_csv as d 
+	WHERE c.cuit = '%s';
+	`
+
+	query := fmt.Sprintf(insertQuery, cuitCliente)
+
 	rs, err := q.db.ExecContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -38,5 +45,7 @@ func (q *Queries) InsertComprobantes(ctx context.Context, cuitCliente string) (s
 }
 
 func GetComprobantes() {
-
+	const selectQuery = `
+	SELECT 
+	`
 }

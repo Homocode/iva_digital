@@ -1,7 +1,7 @@
 package db
 
 type IvaCompras struct {
-	cuit_cliente                                    string
+	Cuit_cliente                                    string
 	Fecha_de_Emisión                                string
 	Tipo_de_Comprobante                             string
 	Punto_de_Venta                                  string
@@ -26,7 +26,7 @@ type IvaCompras struct {
 	Total_Verificador                               int32
 }
 
-type Users struct {
-	cuit        string
-	razonSocial string
+type Clientes struct {
+	Cuit        string `db:"cuit" json:"cuit"`
+	RazonSocial string `db:"razon_social" json:"razon_social"`
 }
