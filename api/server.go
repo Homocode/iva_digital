@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/homocode/libro_iva_afip/db"
 )
@@ -13,12 +14,17 @@ type Server struct {
 }
 
 func NewServer(store *db.SQLStore, addr string) *Server {
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:4200"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+	)
 	router := mux.NewRouter()
 
 	s := &Server{
 		HttpServer: &http.Server{
 			Addr:    addr,
-			Handler: router,
+			Handler: corsHandler(router),
 		},
 		Store: store,
 	}
@@ -33,27 +39,3 @@ func (s *Server) routes(r *mux.Router) {
 	r.HandleFunc("/clientes", s.CreateCliente()).Methods("POST")
 	r.HandleFunc("/upload", s.UploadFile()).Methods("POST")
 }
-
-/* type Server struct {
-	httpServer *http.Server
-	store      *db.SQLStore
-}
-
-// Creates a new HTTP server and setup routing
-func NewServer(store *db.SQLStore, address string) *Server {
-
-	server := &Server{
-		store: store,
-		httpServer: &http.Server{
-			Addr: address,
-		},
-	}
-
-	return server
-}
-
-func (s *Server) Start() error {
-	http.HandleFunc("")
-	return s.httpServer.ListenAndServe()
-}
-*/

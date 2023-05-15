@@ -14,7 +14,7 @@ func UploadFile(r *http.Request) (string, error) {
 	r.ParseMultipartForm(10 << 20)
 
 	// retrieve file
-	file, _, err := r.FormFile("myFile")
+	file, _, err := r.FormFile("file")
 	if err != nil {
 		fmt.Println("Error Retrieving the File")
 		fmt.Println(err)

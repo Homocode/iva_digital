@@ -33,19 +33,34 @@ create table "comprabantes_compras_csv"(
     "Total_IVA" text
 );
 
-create table "iva_compras" (
+create table "comprobantes_compras" (
     "cuit_cliente" varchar,
     "mes_imputación" varchar,
     like comprabantes_compras_csv including all
 );
+
+create table "libro_compras" (
+    "fechaEmision" text;
+  "mesImputacion" text;
+  "tipoComprobante" text;
+  "numeroComprobante" text;
+  "nombreProveedor" text;
+  "cuitProvedor" text;
+  "total" number;
+  "toalNetosGravados" number;
+  "totalIva" number;
+  "ConceptosExentosNoGravados" number;
+  "percepcionesIva" number;
+  "percepcionesIibb" number;
+)
 
 create table "clientes" (
     "cuit" varchar primary key,
     "razon_social" varchar
 );
 
-create index on "iva_compras" ("cuit_cliente");
+create index on "comprobantes_compras" ("cuit_cliente");
 
 create index on "clientes" ("cuit");
 
-alter table "iva_compras" add foreign key ("cuit_cliente") references "clientes" ("cuit");
+alter table "comprobantes_compras" add foreign key ("cuit_cliente") references "clientes" ("cuit");

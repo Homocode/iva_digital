@@ -27,7 +27,7 @@ func (s *SQLStore) LoadIvaComprasToDB(ctx context.Context, arg LoadTxParams) (Lo
 			return err
 		}
 
-		// Populate the table iva_compras with the select columns
+		// Populate the table comprobantes_compras with the select columns
 		// from comprobantes_compras_csv and associate cuit of the cliente
 		rs.createIvaComprasResult, err = s.InsertComprobantes(ctx, arg.CuitCliente)
 		if err != nil {

@@ -28,7 +28,7 @@ func (q *Queries) CopyFromCsv(ctx context.Context, csvPath string) (sql.Result, 
 // el cuit del cliente asociado a los comprobantes.
 func (q *Queries) InsertComprobantes(ctx context.Context, cuitCliente string) (sql.Result, error) {
 	const insertQuery = `
-	INSERT INTO iva_compras
+	INSERT INTO comprobantes_compras
 	SELECT c.cuit, d.* 
 	FROM clientes as c, comprabantes_compras_csv as d 
 	WHERE c.cuit = '%s';
@@ -44,8 +44,6 @@ func (q *Queries) InsertComprobantes(ctx context.Context, cuitCliente string) (s
 	return rs, nil
 }
 
-func GetComprobantes() {
-	const selectQuery = `
-	SELECT 
-	`
+func (q *Queries) ListComprobantes(ctx context.Context) {
+
 }
