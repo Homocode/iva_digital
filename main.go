@@ -31,6 +31,8 @@ func main() {
 		log.Fatal("Can`t load configuration enviroment variables")
 	}
 
+	fmt.Println(config)
+
 	conn := newDB(config)
 	defer func() {
 		_ = conn.Close()
