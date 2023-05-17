@@ -40,19 +40,19 @@ create table "comprobantes_compras" (
 );
 
 create table "libro_compras" (
-    "fechaEmision" text;
-  "mesImputacion" text;
-  "tipoComprobante" text;
-  "numeroComprobante" text;
-  "nombreProveedor" text;
-  "cuitProvedor" text;
-  "total" number;
-  "toalNetosGravados" number;
-  "totalIva" number;
-  "ConceptosExentosNoGravados" number;
-  "percepcionesIva" number;
-  "percepcionesIibb" number;
-)
+  "fechaEmision" varchar,
+  "mesImputacion" varchar,
+  "tipoComprobante" varchar,
+  "numeroComprobante" varchar,
+  "nombreProveedor" varchar,
+  "cuitProvedor" varchar,
+  "total" varchar,
+  "toalNetosGravados" varchar,
+  "totalIva" varchar,
+  "ConceptosExentosNoGravados" varchar,
+  "percepcionesIva" varchar,
+  "percepcionesIibb" varchar
+);
 
 create table "clientes" (
     "cuit" varchar primary key,
