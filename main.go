@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/homocode/libro_iva_afip/api"
 	db "github.com/homocode/libro_iva_afip/db"
@@ -16,10 +17,13 @@ func newDB(cfg util.Config) *sql.DB {
 	if err != nil {
 		log.Fatal("Can´t open connection to DB: ", err)
 	}
-	pingErr := conn.Ping()
-	if pingErr != nil {
-		log.Fatal("Ping to DB fail, can´t connect to DB: ", pingErr)
-	}
+
+	time.AfterFunc(2*time.Second, func() {
+		pingErr := conn.Ping()
+		if pingErr != nil {
+			log.Fatal("Ping to DB fail, can´t connect to DB: ", pingErr)
+		}
+	})
 
 	return conn
 
