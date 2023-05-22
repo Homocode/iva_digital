@@ -35,6 +35,10 @@ func NewServer(store *db.SQLStore, addr string) *Server {
 }
 
 func (s *Server) routes(r *mux.Router) {
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		data := []byte("Hello World!")
+		w.Write(data)
+	})
 	r.HandleFunc("/clientes", s.ListClientes()).Methods("GET")
 	r.HandleFunc("/clientes", s.CreateCliente()).Methods("POST")
 	r.HandleFunc("/upload", s.UploadFile()).Methods("POST")
