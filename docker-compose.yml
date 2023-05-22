@@ -9,8 +9,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "3000"
     environment:
       - DB_SOURCE=postgresql://root:123@postgres/contable?sslmode=disable
     depends_on:
