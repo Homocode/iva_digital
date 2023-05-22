@@ -16,7 +16,7 @@ COPY start.sh /app/
 COPY wait-for.sh /app/ 
 COPY db/migration ./migration
 
-EXPOSE 8080
+EXPOSE 3000
 
 ENTRYPOINT [ "/app/start.sh" ]
 CMD ["/app/main"]
